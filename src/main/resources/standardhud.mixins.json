@@ -1,0 +1,14 @@
+{
+	"required": true,
+	"package": "net.mersid.standardhud.mixins",
+	"compatibilityLevel": "JAVA_8",
+	"mixins": [
+	"ClientPlayerEntityMixin",
+	"IngameHudMixin",
+	"CurrentFps"
+	],
+	"client": [],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}
