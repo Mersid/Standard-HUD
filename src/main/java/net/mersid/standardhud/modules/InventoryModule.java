@@ -64,7 +64,7 @@ public class InventoryModule extends Module {
 		// If slot is not empty, render name and dura.
 		if (!(itemStack.getItem() instanceof AirBlockItem))
 		{
-			DiffuseLighting.method_24211();
+			DiffuseLighting.enable();
 			itemRenderer.renderGuiItem(itemStack, X_OFFSET, y);
 
 			if (itemStack.isDamageable())

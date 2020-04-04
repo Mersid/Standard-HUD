@@ -26,7 +26,7 @@ public final class WPlayer
 	public static double getCompass()
 	{
 		// Compass can go over 360, so modulo sets it between -360 and 360. If -360, do subtraction, because it does not automatically wrap around.
-		double compass = WMinecraft.getPlayer().headYaw;
+		double compass = WMinecraft.getPlayer().headYaw + 180; // Some reason the head's yaw was facing in the opposite direction.
 		compass %= 360;
 		compass = compass < 0 ? 360 + compass : compass;
 		return compass;

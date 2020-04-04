@@ -36,7 +36,7 @@ public class PotionModule extends Module {
 
 	public PotionModule() {
 		super("Potion");
-		OnRenderCallback.EVENT.register(() -> onRenderGUI());
+		OnRenderCallback.EVENT.register(this::onRenderGUI);
 	}
 
 	private void onRenderGUI()
@@ -64,11 +64,14 @@ public class PotionModule extends Module {
 			MinecraftClient.getInstance().getTextureManager().bindTexture(sprite.getAtlas().getId());
 			DrawableHelper.blit(window.getScaledWidth() - X_OFFSET - 18, y, 0, 18, 18, statusEffectSpriteManager.getSprite(effect.getEffectType()));
 			
-			// Render text
+			// Render text. effectEnchantmentLevel shows the Roman numerals after the name, but only if the level is between 2 and 10.
+			// Code portially borrowed from AbstractInventoryScreen.drawStatusEffectDescriptions
 			String effectName = I18n.translate(effect.getTranslationKey());
+			String effectEnchantmentLevel = effect.getAmplifier() >= 1 && effect.getAmplifier() <= 9 ? " " + I18n.translate("enchantment.level." + (effect.getAmplifier() + 1)) : "";
 			String effectDurationStr = StatusEffectUtil.durationToString(effect, 1.0f);
+
 			
-			WMinecraft.renderText(effectName, window.getScaledWidth() - X_OFFSET - 23 - textRenderer.getStringWidth(effectName), y - 4); // Some magic numbers for fine tuning... sorry.
+			WMinecraft.renderText(effectName + effectEnchantmentLevel, window.getScaledWidth() - X_OFFSET - 23 - textRenderer.getStringWidth(effectName) - textRenderer.getStringWidth((effectEnchantmentLevel)), y - 4); // Some magic numbers for fine tuning... sorry.
 			WMinecraft.renderText(effectDurationStr, window.getScaledWidth() - X_OFFSET - 23 - textRenderer.getStringWidth(effectDurationStr), y + 6);
 			
 			

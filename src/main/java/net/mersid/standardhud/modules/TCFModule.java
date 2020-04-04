@@ -37,7 +37,7 @@ public class TCFModule extends Module {
 		WMinecraft.renderText("Compass: " + FormattingCodes.YELLOW + String.format("%.2f", compass) + FormattingCodes.RESET + " (" + FormattingCodes.YELLOW + WPlayer.getCompassDirection() + FormattingCodes.RESET + ")", 3, mw.getScaledHeight() - 21);
 		
 		// https://github.com/Lunatrius/InGame-Info-XML/blob/master/src/main/java/com/github/lunatrius/ingameinfo/tag/TagTime.java
-		final long time = WMinecraft.getWorld().getTime();
+		final long time = WMinecraft.getWorld().getTimeOfDay();
         final long hour = (time / 1000 + 6) % 24;
         final long minute = (time % 1000) * 60 / 1000;
         WMinecraft.renderText("Time: " + FormattingCodes.YELLOW + String.format("%02d:%02d", hour, minute) + FormattingCodes.RESET, 3, mw.getScaledHeight() - 31);
