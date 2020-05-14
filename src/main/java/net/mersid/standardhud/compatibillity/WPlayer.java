@@ -31,6 +31,15 @@ public final class WPlayer
 		compass = compass < 0 ? 360 + compass : compass;
 		return compass;
 	}
+
+	/**
+	 * Gets the elevation of the player's head, from 90 (straight up) to -90 (straight down)
+	 * @return
+	 */
+	public static double getAngle()
+	{
+		return -WMinecraft.getPlayer().pitch;
+	}
 	
 	/**
 	 * Returns based on angle

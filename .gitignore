@@ -5,6 +5,10 @@ build/
 out/
 classes/
 
+# eclipse
+
+*.launch
+
 # idea
 
 .idea/
@@ -23,4 +27,4 @@ bin/
 # fabric
 
 run/
-*.launch
+Standard-HUD-1.15.7z
