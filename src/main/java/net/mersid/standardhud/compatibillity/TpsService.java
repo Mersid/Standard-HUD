@@ -46,7 +46,7 @@ public class TpsService {
 		if (this.timeLastTimeUpdate != -1L)
 		{
 			float timeElapsed = (float)(System.currentTimeMillis() - this.timeLastTimeUpdate) / 1000.0F;
-			this.tickRates[(this.nextIndex % this.tickRates.length)] = MathHelper.clamp(20.0F / timeElapsed, 0.0F, 20.0F);
+			this.tickRates[this.nextIndex % this.tickRates.length] = MathHelper.clamp(20.0F / timeElapsed, 0.0F, 20.0F);
 			this.nextIndex += 1;
 		}
 		this.timeLastTimeUpdate = System.currentTimeMillis();
