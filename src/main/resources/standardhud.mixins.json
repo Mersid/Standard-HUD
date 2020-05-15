@@ -3,6 +3,7 @@
 	"package": "net.mersid.standardhud.mixins",
 	"compatibilityLevel": "JAVA_8",
 	"mixins": [
+	"ClientConnectionMixin",
 	"ClientPlayerEntityMixin",
 	"IngameHudMixin",
 	"CurrentFps"

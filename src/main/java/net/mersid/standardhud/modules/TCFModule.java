@@ -2,13 +2,16 @@ package net.mersid.standardhud.modules;
 
 import net.mersid.standardhud.Module;
 import net.mersid.standardhud.compatibillity.FormattingCodes;
+import net.mersid.standardhud.compatibillity.TpsService;
 import net.mersid.standardhud.compatibillity.WMinecraft;
 import net.mersid.standardhud.compatibillity.WPlayer;
 import net.mersid.standardhud.events.OnRenderCallback;
+import net.mersid.standardhud.events.PacketInputEvent;
 import net.mersid.standardhud.mixins.CurrentFps;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.util.Window;
+import net.minecraft.network.packet.s2c.play.WorldTimeUpdateS2CPacket;
 
 public class TCFModule extends Module {
 
@@ -16,7 +19,6 @@ public class TCFModule extends Module {
 		super("Time, Compass, and FPS");
 		
 		OnRenderCallback.EVENT.register(this::onRenderGUI);
-		
 	}
 	
 	public void onRenderGUI()
@@ -69,15 +71,27 @@ public class TCFModule extends Module {
 	{
 		int fps = CurrentFps.get();
 		Window mw = MinecraftClient.getInstance().getWindow();
-		String colorcode =
+		String fpsFormattingCode =
 				fps > 100	?	FormattingCodes.DARK_GREEN	:
 				fps > 60 	?	FormattingCodes.GREEN		:
 				fps > 45	?	FormattingCodes.YELLOW		:
 				fps > 30	?	FormattingCodes.GOLD		:
 				fps > 15	?	FormattingCodes.RED			:
-				FormattingCodes.DARK_RED	;
+				FormattingCodes.DARK_RED;
 
-		WMinecraft.renderText("FPS: " + colorcode + Integer.toString(fps) + FormattingCodes.RESET, 3, mw.getScaledHeight() - 11);
+		float tps = TpsService.INSTANCE.getTickRate();
+		String tpsFormattingCode =
+				tps >= 18   ?   FormattingCodes.DARK_GREEN  :
+				tps >= 14   ?   FormattingCodes.GREEN       :
+				tps >= 10   ?   FormattingCodes.YELLOW      :
+				tps >= 6    ?   FormattingCodes.GOLD        :
+				tps >= 3    ?   FormattingCodes.RED         :
+				FormattingCodes.DARK_RED;
+
+		WMinecraft.renderText(
+				"FPS: " + fpsFormattingCode + fps + FormattingCodes.RESET +
+				" | TPS: " + tpsFormattingCode + String.format("%.2f", tps)  + FormattingCodes.RESET
+				, 3, mw.getScaledHeight() - 11);
 	}
 
 	private void renderCompass()
