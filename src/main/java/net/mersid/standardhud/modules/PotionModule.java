@@ -15,6 +15,7 @@ import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.client.texture.StatusEffectSpriteManager;
 import net.minecraft.client.texture.TextureManager;
 import net.minecraft.client.util.Window;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffectUtil;
@@ -39,7 +40,7 @@ public class PotionModule extends Module {
 		OnRenderCallback.EVENT.register(this::onRenderGUI);
 	}
 
-	private void onRenderGUI()
+	private void onRenderGUI(MatrixStack matrixStack, float partialTicks)
 	{
 		textRenderer = WMinecraft.getFontRenderer();
 		player = WMinecraft.getPlayer();
@@ -62,7 +63,7 @@ public class PotionModule extends Module {
 			StatusEffect statusEffect = effect.getEffectType();
 			Sprite sprite = statusEffectSpriteManager.getSprite(statusEffect);
 			MinecraftClient.getInstance().getTextureManager().bindTexture(sprite.getAtlas().getId());
-			DrawableHelper.blit(window.getScaledWidth() - X_OFFSET - 18, y, 0, 18, 18, statusEffectSpriteManager.getSprite(effect.getEffectType()));
+			DrawableHelper.drawSprite(matrixStack, window.getScaledWidth() - X_OFFSET - 18, y, 0, 18, 18, statusEffectSpriteManager.getSprite(effect.getEffectType()));
 			
 			// Render text. effectEnchantmentLevel shows the Roman numerals after the name, but only if the level is between 2 and 10.
 			// Code portially borrowed from AbstractInventoryScreen.drawStatusEffectDescriptions
@@ -71,8 +72,8 @@ public class PotionModule extends Module {
 			String effectDurationStr = StatusEffectUtil.durationToString(effect, 1.0f);
 
 			
-			WMinecraft.renderText(effectName + effectEnchantmentLevel, window.getScaledWidth() - X_OFFSET - 23 - textRenderer.getStringWidth(effectName) - textRenderer.getStringWidth((effectEnchantmentLevel)), y - 4); // Some magic numbers for fine tuning... sorry.
-			WMinecraft.renderText(effectDurationStr, window.getScaledWidth() - X_OFFSET - 23 - textRenderer.getStringWidth(effectDurationStr), y + 6);
+			WMinecraft.renderText(matrixStack, effectName + effectEnchantmentLevel, window.getScaledWidth() - X_OFFSET - 23 - textRenderer.getWidth(effectName) - textRenderer.getWidth((effectEnchantmentLevel)), y - 4); // Some magic numbers for fine tuning... sorry.
+			WMinecraft.renderText(matrixStack, effectDurationStr, window.getScaledWidth() - X_OFFSET - 23 - textRenderer.getWidth(effectDurationStr), y + 6);
 			
 			
 			y -= Y_INCREMENT;

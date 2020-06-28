@@ -11,6 +11,7 @@ import net.mersid.standardhud.mixins.CurrentFps;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.util.Window;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.network.packet.s2c.play.WorldTimeUpdateS2CPacket;
 
 public class TCFModule extends Module {
@@ -21,15 +22,15 @@ public class TCFModule extends Module {
 		OnRenderCallback.EVENT.register(this::onRenderGUI);
 	}
 	
-	public void onRenderGUI()
+	public void onRenderGUI(MatrixStack matrixStack, float partialTicks)
 	{
-		renderTime();
-		renderCoords();
-		renderCompass();
-		renderFps();
+		renderTime(matrixStack);
+		renderCoords(matrixStack);
+		renderCompass(matrixStack);
+		renderFps(matrixStack);
 	}
 
-	private void renderCoords()
+	private void renderCoords(MatrixStack matrixStack)
 	{
 		Window mw = MinecraftClient.getInstance().getWindow();
 		ClientPlayerEntity player = WMinecraft.getPlayer();
@@ -61,13 +62,14 @@ public class TCFModule extends Module {
 				FormattingCodes.YELLOW;
 
 		WMinecraft.renderText(
+				matrixStack,
 				"Coords: X: " + xFormattingCode + String.format("%.3f", player.getX()) + FormattingCodes.RESET +
 				", Y: " + yFormattingCode + String.format("%.3f", player.getY()) + FormattingCodes.RESET +
 				", Z: " + zFormattingCode + String.format("%.3f", player.getZ()) + FormattingCodes.RESET ,
 				3, mw.getScaledHeight() - 31);
 	}
 
-	private void renderFps()
+	private void renderFps(MatrixStack matrixStack)
 	{
 		int fps = CurrentFps.get();
 		Window mw = MinecraftClient.getInstance().getWindow();
@@ -89,29 +91,32 @@ public class TCFModule extends Module {
 				FormattingCodes.DARK_RED;
 
 		WMinecraft.renderText(
+				matrixStack,
 				"FPS: " + fpsFormattingCode + fps + FormattingCodes.RESET +
 				" | TPS: " + tpsFormattingCode + String.format("%.2f", tps)  + FormattingCodes.RESET
 				, 3, mw.getScaledHeight() - 11);
 	}
 
-	private void renderCompass()
+	private void renderCompass(MatrixStack matrixStack)
 	{
 		double compass = WPlayer.getCompass();
 		Window mw = MinecraftClient.getInstance().getWindow();
-		WMinecraft.renderText("Compass: " + FormattingCodes.YELLOW + String.format("%.2f", compass) +
+		WMinecraft.renderText(
+				matrixStack,
+				"Compass: " + FormattingCodes.YELLOW + String.format("%.2f", compass) +
 				FormattingCodes.RESET + " (" + FormattingCodes.YELLOW + WPlayer.getCompassDirection() +
 				FormattingCodes.RESET + ") | Angle: " + FormattingCodes.YELLOW + String.format("%.2f", WPlayer.getAngle()) +
 				FormattingCodes.RESET, 3, mw.getScaledHeight() - 21);
 	}
 
 
-	private void renderTime()
+	private void renderTime(MatrixStack matrixStack)
 	{
 		// https://github.com/Lunatrius/InGame-Info-XML/blob/master/src/main/java/com/github/lunatrius/ingameinfo/tag/TagTime.java
 		final long time = WMinecraft.getWorld().getTimeOfDay();
 		final long hour = (time / 1000 + 6) % 24;
 		final long minute = (time % 1000) * 60 / 1000;
 		Window mw = MinecraftClient.getInstance().getWindow();
-		WMinecraft.renderText("Time: " + FormattingCodes.YELLOW + String.format("%02d:%02d", hour, minute) + FormattingCodes.RESET, 3, mw.getScaledHeight() - 41);
+		WMinecraft.renderText(matrixStack, "Time: " + FormattingCodes.YELLOW + String.format("%02d:%02d", hour, minute) + FormattingCodes.RESET, 3, mw.getScaledHeight() - 41);
 	}
 }

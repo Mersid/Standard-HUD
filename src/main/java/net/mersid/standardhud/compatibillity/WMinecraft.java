@@ -7,6 +7,7 @@
  */
 package net.mersid.standardhud.compatibillity;
 
+import net.minecraft.client.util.math.MatrixStack;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.MinecraftClient;
@@ -34,10 +35,10 @@ public final class WMinecraft
 		return mc.textRenderer;
 	}
 	
-	public static void renderText(String text, int x, int y)
+	public static void renderText(MatrixStack matrixStack, String text, int x, int y)
 	{
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
-		getFontRenderer().drawWithShadow(text, x, y, 0xFFFFFF);
+		getFontRenderer().drawWithShadow(matrixStack, text, x, y, 0xFFFFFF);
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 	}
 }

@@ -70,11 +70,11 @@ public final class WPlayer
 	{
 		int arrows = 0;
 		PlayerInventory inventory = WMinecraft.getPlayer().inventory;
-		for (int i = 0; i < inventory.getInvSize(); i++)
+		for (int i = 0; i < inventory.size(); i++)
 		{
-			if (inventory.getInvStack(i).getItem() instanceof ArrowItem)
+			if (inventory.getStack(i).getItem() instanceof ArrowItem)
 			{
-				arrows += inventory.getInvStack(i).getCount();
+				arrows += inventory.getStack(i).getCount();
 			}
 		}
 		return arrows;

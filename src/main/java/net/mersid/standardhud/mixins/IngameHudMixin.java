@@ -7,6 +7,7 @@
  */
 package net.mersid.standardhud.mixins;
 
+import net.minecraft.client.util.math.MatrixStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -22,13 +23,13 @@ public class IngameHudMixin extends DrawableHelper
 {
 	@Inject(at = {@At(value = "INVOKE",
 			target = "Lcom/mojang/blaze3d/systems/RenderSystem;enableBlend()V",
-			ordinal = 4)}, method = {"render(F)V"})
-	private void onRender(float partialTicks, CallbackInfo ci)
+			ordinal = 4)}, method = {"render(Lnet/minecraft/client/util/math/MatrixStack;F)V"})
+	private void onRender(MatrixStack matrixStack, float partialTicks, CallbackInfo ci)
 	{
 		if(MinecraftClient.getInstance().options.debugEnabled)
 			return;
 		
-		OnRenderCallback.EVENT.invoker().onRender();
+		OnRenderCallback.EVENT.invoker().onRender(matrixStack, partialTicks);
 	}
 	
 	@Inject(at = @At("HEAD"), method = { "renderStatusEffectOverlay()V" }, cancellable = true)

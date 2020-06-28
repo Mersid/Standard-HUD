@@ -13,6 +13,7 @@ import net.minecraft.client.render.DiffuseLighting;
 import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.util.Window;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.*;
@@ -30,10 +31,10 @@ public class InventoryModule extends Module {
 	
 	public InventoryModule() {
 		super("Inventory");
-		OnRenderCallback.EVENT.register(() -> onRenderGUI());
+		OnRenderCallback.EVENT.register(this::onRenderGUI);
 	}
 	
-	public void onRenderGUI()
+	public void onRenderGUI(MatrixStack matrixStack, float partialTicks)
 	{
 		Window mw = MinecraftClient.getInstance().getWindow();
 		y = mw.getScaledHeight() / 2 - 60;
@@ -42,19 +43,19 @@ public class InventoryModule extends Module {
 		textRenderer = MinecraftClient.getInstance().textRenderer;
 		player = WMinecraft.getPlayer();
 		
-		renderSlot(EquipmentSlot.HEAD);
-		renderSlot(EquipmentSlot.CHEST);
-		renderSlot(EquipmentSlot.LEGS);
-		renderSlot(EquipmentSlot.FEET);
-		renderSlot(EquipmentSlot.MAINHAND);
-		renderSlot(EquipmentSlot.OFFHAND);
+		renderSlot(matrixStack, EquipmentSlot.HEAD);
+		renderSlot(matrixStack, EquipmentSlot.CHEST);
+		renderSlot(matrixStack, EquipmentSlot.LEGS);
+		renderSlot(matrixStack, EquipmentSlot.FEET);
+		renderSlot(matrixStack, EquipmentSlot.MAINHAND);
+		renderSlot(matrixStack, EquipmentSlot.OFFHAND);
 	}
 	
 	/**
 	 * Renders an armor or item slot on the side of the screen, with corresponding text.
 	 * @param slot
 	 */
-	private void renderSlot(EquipmentSlot slot)
+	private void renderSlot(MatrixStack matrixStack, EquipmentSlot slot)
 	{
 		if (MinecraftClient.getInstance().currentScreen instanceof ChatScreen) return;
 
@@ -65,7 +66,7 @@ public class InventoryModule extends Module {
 		if (!(itemStack.getItem() instanceof AirBlockItem))
 		{
 			DiffuseLighting.enable();
-			itemRenderer.renderGuiItem(itemStack, X_OFFSET, y);
+			itemRenderer.renderGuiItemIcon(itemStack, X_OFFSET, y);
 
 			if (itemStack.isDamageable())
 			{
@@ -76,7 +77,7 @@ public class InventoryModule extends Module {
 				if ((slot == EquipmentSlot.MAINHAND || slot == EquipmentSlot.OFFHAND) && !(itemStack.getItem() instanceof BowItem || itemStack.getItem() instanceof CrossbowItem))
 				{
 					int itemCountInInventory = itemsInInventory(itemStack.getItem());
-					WMinecraft.renderText(Integer.toString(itemCountInInventory), X_OFFSET + 17 - textRenderer.getStringWidth(Integer.toString(itemCountInInventory)), y + 9);
+					WMinecraft.renderText(matrixStack, Integer.toString(itemCountInInventory), X_OFFSET + 17 - textRenderer.getWidth(Integer.toString(itemCountInInventory)), y + 9);
 				}
 
 			}
@@ -86,13 +87,13 @@ public class InventoryModule extends Module {
 			{
 		        //GlStateManager.disableDepthTest();
 				int arrowCount = WPlayer.getArrowCount();
-				WMinecraft.renderText(Integer.toString(arrowCount), X_OFFSET + 17 - textRenderer.getStringWidth(Integer.toString(arrowCount)), y + 9);
+				WMinecraft.renderText(matrixStack, Integer.toString(arrowCount), X_OFFSET + 17 - textRenderer.getWidth(Integer.toString(arrowCount)), y + 9);
 			}
 			DiffuseLighting.disable();
 		
 		
 
-			WMinecraft.renderText(itemStack.getName().asFormattedString(), X_OFFSET + 20, y);
+			WMinecraft.renderText(matrixStack, itemStack.getName().getString(), X_OFFSET + 20, y);
 			
 			if (itemStack.isDamageable())
 			{
@@ -107,7 +108,7 @@ public class InventoryModule extends Module {
 						percent > 0.25	?	FormattingCodes.GOLD		:
 						percent > 0.1	?	FormattingCodes.RED			:
 											FormattingCodes.DARK_RED	;
-				WMinecraft.renderText(colorcode + Integer.toString(durability) + "/" + Integer.toString(maxDurability) + FormattingCodes.RESET, X_OFFSET + 20, y + 10);
+				WMinecraft.renderText(matrixStack, colorcode + Integer.toString(durability) + "/" + Integer.toString(maxDurability) + FormattingCodes.RESET, X_OFFSET + 20, y + 10);
 			}
 			
 		}
@@ -125,11 +126,11 @@ public class InventoryModule extends Module {
 	{
 		int itemCount = 0;
 		PlayerInventory inventory = WMinecraft.getPlayer().inventory;
-		for (int i = 0; i < inventory.getInvSize(); i++)
+		for (int i = 0; i < inventory.size(); i++)
 		{
-			if (inventory.getInvStack(i).getItem().equals(item))
+			if (inventory.getStack(i).getItem().equals(item))
 			{
-				itemCount += inventory.getInvStack(i).getCount();
+				itemCount += inventory.getStack(i).getCount();
 			}
 		}
 		return itemCount;
