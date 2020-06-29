@@ -32,7 +32,7 @@ public class IngameHudMixin extends DrawableHelper
 		OnRenderCallback.EVENT.invoker().onRender(matrixStack, partialTicks);
 	}
 	
-	@Inject(at = @At("HEAD"), method = { "renderStatusEffectOverlay()V" }, cancellable = true)
+	@Inject(at = @At("HEAD"), method = { "renderStatusEffectOverlay(Lnet/minecraft/client/util/math/MatrixStack;)V" }, cancellable = true)
 	private void onRenderStatusEffectOverlay(CallbackInfo ci)
 	{
 		ci.cancel();
