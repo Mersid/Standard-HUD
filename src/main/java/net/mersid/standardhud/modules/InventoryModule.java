@@ -17,6 +17,10 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.*;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import org.lwjgl.opengl.GL11;
 
 public class InventoryModule extends Module {
@@ -93,8 +97,8 @@ public class InventoryModule extends Module {
 		
 		
 
-			WMinecraft.renderText(matrixStack, itemStack.getName().getString(), X_OFFSET + 20, y);
-			
+			WMinecraft.renderText(matrixStack, ((MutableText)itemStack.getName()).formatted(itemStack.getRarity().formatting), X_OFFSET + 20, y);
+
 			if (itemStack.isDamageable())
 			{
 				int durability = itemStack.getMaxDamage() - itemStack.getDamage();
