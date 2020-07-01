@@ -7,6 +7,8 @@
  */
 package net.mersid.standardhud.compatibillity;
 
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ArrowItem;
@@ -78,5 +80,24 @@ public final class WPlayer
 			}
 		}
 		return arrows;
+	}
+
+	public static int getPing()
+	{
+		MinecraftClient mc = MinecraftClient.getInstance();
+		ClientPlayNetworkHandler clientPlayNetworkHandler = mc.getNetworkHandler();
+
+		if (clientPlayNetworkHandler == null) // Single player
+			return 0;
+
+		if (mc.player == null)
+			return -1;
+
+		try {
+			return clientPlayNetworkHandler.getPlayerListEntry(mc.player.getUuid()).getLatency();
+		} catch (NullPointerException ignored) {
+			// Return -1 on error below
+		}
+		return -1;
 	}
 }

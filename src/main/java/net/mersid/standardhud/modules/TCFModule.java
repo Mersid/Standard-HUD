@@ -90,10 +90,20 @@ public class TCFModule extends Module {
 				tps >= 3    ?   FormattingCodes.RED         :
 				FormattingCodes.DARK_RED;
 
+		int ping = WPlayer.getPing();
+		String pingFormattingCode =
+				ping <= 40	?	FormattingCodes.DARK_GREEN	:
+				ping <= 100	?	FormattingCodes.GREEN		:
+				ping <= 175	?	FormattingCodes.YELLOW		:
+				ping <= 350 ?	FormattingCodes.GOLD		:
+				ping <= 500	?	FormattingCodes.RED			:
+				FormattingCodes.DARK_RED;		
+
 		WMinecraft.renderText(
 				matrixStack,
 				"FPS: " + fpsFormattingCode + fps + FormattingCodes.RESET +
-				" | TPS: " + tpsFormattingCode + String.format("%.2f", tps)  + FormattingCodes.RESET
+				" | TPS: " + tpsFormattingCode + String.format("%.2f", tps)  + FormattingCodes.RESET +
+				" | Ping: " + pingFormattingCode + ping + FormattingCodes.RESET
 				, 3, mw.getScaledHeight() - 11);
 	}
 
